@@ -1,0 +1,163 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+		<title>Minerva Server Manager</title>
+		<meta charset="UTF-8"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	</head>
+	<body>
+		<header>
+			<nav class="top-nav">
+				<div class="container">
+					<a class="button-collapse top-nav full hide-on-large-only" href="#" data-activates="slide-out">
+						<i class="material-icons">menu</i>
+					</a>
+				</div>
+				<div class="container">
+					<div class="nav-wrapper center">
+						<a class="page-title">“minerva” Server Information</a>
+					</div>
+				</div>
+			</nav>
+			<ul id="slide-out" class="side-nav fixed collapsible">
+				<li class="logo">
+					<a id="logo-container" class="brand-logo center" href="#!">
+						<img src="minerva.png">
+					</a>
+				</li>
+				<li class="bold">
+					<a class="collapsible-header waves-effect waves-teal">Panel management</a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href="#!">Administrators</a></li>
+							<li><a href="#!">Other stuff ¯\_(ツ)_/¯</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="bold active">
+					<a class="collapsible-header waves-effect waves-teal active">Servers</a>
+					<div class="collapsible-body">
+						<ul>
+							<li><a href="#!">creative2</a></li>
+							<li class="active"><a href="#!">minerva</a></li>
+							<li><a href="#!">anarchy</a></li>
+							<li><a href="#!">creative</a></li>
+							<li><a href="#!">patreon</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+			<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+			<script type="text/javascript">
+				$(".button-collapse").sideNav()
+				$('.collapsible').collapsible();
+			</script>
+<style>
+	header, main, footer {
+		padding-left: 300px;
+	}
+
+	@media only screen and (max-width : 992px) {
+		header, main, footer {
+			padding-left: 0px;
+		}
+	}
+
+	@media only screen and (max-width : 599px) {
+		.page-title {
+			font-size: 1.0994em;
+		}
+	}
+
+	@media only screen and (min-width : 600px) {
+		.page-title {
+			font-size: 24pt;
+		}
+	}
+
+	#logo-container {
+		height: 100%;
+	}
+
+	.btn-group > .btn:first-child:not(:last-child) {
+		margin-left: 0px;
+		border-top-right-radius: 0px;
+		border-bottom-right-radius: 0px;
+	}
+
+	.btn-group > .btn:last-child:not(:first-child) {
+		margin-left: -5px;
+		border-top-left-radius: 0px;
+		border-bottom-left-radius: 0px;
+	}
+
+	.btn-group > .btn:not(:first-child):not(:last-child) {
+		margin-left: -5px;
+		border-top-left-radius: 0px;
+		border-bottom-left-radius: 0px;
+		border-top-right-radius: 0px;
+		border-bottom-right-radius: 0px;
+	}
+</style>
+		</header>
+		<main>
+			<div class="container">
+				<div class="right">
+					<br>
+					<div class="btn-group">
+						<a class="btn red">Stop</a>
+						<a class="btn yellow darken-4">Restart</a>
+						<a class="btn green">Start</a>
+					</div>
+				</div>
+				<form style="top: 10px; position: relative;">
+					<div class="row">
+						<div class="col s12">
+							<div class="row">
+								<div class="col s4 input-field">
+									<input id="server_name" type="text" disabled value="survival">
+									<label for="server_name">Server Name</label>
+								</div>
+								<div class="col s4 input-field">
+									<input id="server_port" type="text" disabled value="65535">
+									<label for="server_port">Server Port</label>
+								</div>
+								<div class="col s4 input-field">
+									<input id="server_ram" type="text" value="3072">
+									<label for="server_ram">RAM (MiB)</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s12 input-field">
+									<input id="server_world" type="text" list="worlds" value="world" />
+									<datalist id="worlds">
+										<option value="Other">
+										<option value="worlds">
+										<option value="show">
+										<option value="here">
+									</datalist>
+									<label for="server_world">Active world (requires restart; auto-complete available)</label>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col s12 input-field">
+									<input id="server_jar" type="text" list="jars" value="minerva/minerva.jar" />
+									<datalist id="jars">
+										<option>minecraft/2017-09-10-01-26-11-minecraft_server.1.12.1.jar</option>
+										<option>minecraft/2017-09-22-16-53-04-minecraft_server.1.12.2.jar</option>
+										<option>minerva/minerva.jar</option>
+										<option>minukkit/craftbukkit-1.12.jar</option>
+									</datalist>
+									<label for="server_jar">Jar (requires restart; auto-complete available)</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+				</div>
+		</main>
+	</body>
+</html>
