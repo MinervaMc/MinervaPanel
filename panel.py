@@ -6,9 +6,10 @@ import re
 import subprocess
 from typing import Any, Dict, List, NamedTuple
 
+import secrets
+
 app = Flask(__name__)
 DEBUG = True
-
 
 Server = NamedTuple('Server', [("name", str), ("online", bool)])
 
@@ -96,3 +97,6 @@ def restart(server: str) -> Any:
 def start(server: str) -> Any:
     subprocess.run(["msm", server, "start"])
     return redirect("/" + server)
+
+
+app.secret_key = secrets.secret_key
