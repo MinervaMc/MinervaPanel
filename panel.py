@@ -2,6 +2,7 @@
 # -*- encoding: utf8
 
 from flask import Flask, render_template, redirect, abort
+import os
 import re
 import subprocess
 from typing import Any, Dict, List, NamedTuple
@@ -49,7 +50,27 @@ def getJarList() -> List[str]:
                 "minerva/minerva.jar",
                 "minukkit/craftbukkit-1.12.jar"
                 ]
-    return []
+    jardir = getMSMConfig()["JAR_STORAGE_PATH"]
+    ret = []
+    for (dirpath, dirs, files) in os.walk(jardir):
+        if not dirpath.startswith(jardir + "/"):
+            continue
+        path = dirpath[len(jardir)+1:]
+        for fil in files:
+            if fil.endswith(".jar"):
+                ret.append(path + "/" + fil)
+    return ret
+
+
+def getMSMConfig() -> Dict[str, str]:
+    msm = subprocess.run(["msm", "config"], stdout=subprocess.PIPE, check=True)
+    output = msm.stdout.decode("utf-8")  # type: str
+    ret = {}
+    for line in output.splitlines():
+        split = line.split("=")
+        if len(split) == 2:
+            ret[split[0]] = split[1][1:-1]
+    return ret
 
 
 @app.route("/")
