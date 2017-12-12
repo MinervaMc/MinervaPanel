@@ -77,3 +77,22 @@ def server(server: str) -> Any:
 
     return render_template("server.html", serverInfo=serverInfo,
                            servers=servers.values(), worlds=worlds, jars=jars)
+
+
+# TODO: Run start/restart/stop in the background and give user feedback
+@app.route("/<server>/stop")
+def stop(server: str) -> Any:
+    subprocess.run(["msm", server, "stop"])
+    return redirect("/" + server)
+
+
+@app.route("/<server>/restart")
+def restart(server: str) -> Any:
+    subprocess.run(["msm", server, "restart"])
+    return redirect("/" + server)
+
+
+@app.route("/<server>/start")
+def start(server: str) -> Any:
+    subprocess.run(["msm", server, "start"])
+    return redirect("/" + server)
