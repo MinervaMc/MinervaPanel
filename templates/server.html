@@ -31,7 +31,7 @@
 				</div>
 				<div class="row">
 					<div class="col s12 input-field">
-						<input id="server_world" type="text" list="worlds" value="{{serverInfo.world}}" />
+						<input id="server_world" type="text" list="worlds" value="{{serverInfo.world}}" disabled />
 						<datalist id="worlds">
 							{% for world_ in worlds %}
 							<option>{{world_}}</option>
@@ -42,7 +42,7 @@
 				</div>
 				<div class="row">
 					<div class="col s12 input-field">
-						<input id="server_jar" type="text" list="jars" value="{{serverInfo.jar}}" />
+						<input id="server_jar" type="text" list="jars" value="{{serverInfo.jar}}" disabled />
 						<datalist id="jars">
 							{% for jar_ in jars %}
 							<option>{{jar_}}</option>

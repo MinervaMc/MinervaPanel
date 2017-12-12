@@ -2,6 +2,8 @@
 # -*- encoding: utf8
 
 from flask import Flask, render_template, redirect, abort
+import re
+import subprocess
 from typing import Any, Dict, List, NamedTuple
 
 app = Flask(__name__)
@@ -9,6 +11,8 @@ DEBUG = True
 
 
 Server = NamedTuple('Server', [("name", str), ("online", bool)])
+
+SERVERLIST_REGEX = re.compile(r"\[ (?:IN)?ACTIVE \] \"([^\"]+)\" is (running|stopped).")
 
 
 def getServers() -> Dict[str, Server]:
@@ -19,13 +23,22 @@ def getServers() -> Dict[str, Server]:
                 "creative": Server("creative", True),
                 "patreon": Server("patreon", False)
                 }
-    return {}
+    msm = subprocess.run(["msm", "server", "list"], stdout=subprocess.PIPE, check=True)
+    output = msm.stdout.decode("utf-8")  # type: str
+    ret = {}
+    for line in output.splitlines():
+        m = SERVERLIST_REGEX.match(line)
+        if m is not None:
+            ret[m.group(1)] = Server(m.group(1), m.group(2) == "running")
+    return ret
 
 
 def getWorldList(server: str) -> List[str]:
     if DEBUG:
         return ["world", "Other", "worlds", "show", "here"]
-    return []
+    msm = subprocess.run(["msm", server, "worlds", "list"], stdout=subprocess.PIPE, check=True)
+    output = msm.stdout.decode("utf-8")  # type: str
+    return output.splitlines()
 
 
 def getJarList() -> List[str]:
