@@ -43,3 +43,18 @@ header, main, footer {
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
+
+.lamp {
+	width: 24px;
+	height: 24px;
+	margin: 0 auto;
+	border-radius: 50%;
+}
+
+.lamp.red {
+	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #480F16 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+}
+
+.lamp.green {
+	box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #344200 0 -1px 9px, #88FF00 0 2px 12px;
+}

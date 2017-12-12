@@ -2,16 +2,24 @@
 # -*- encoding: utf8
 
 from flask import Flask, render_template, redirect, abort
-from typing import Any, List
+from typing import Any, Dict, List, NamedTuple
 
 app = Flask(__name__)
 DEBUG = True
 
 
-def getServerList() -> List[str]:
+Server = NamedTuple('Server', [("name", str), ("online", bool)])
+
+
+def getServers() -> Dict[str, Server]:
     if DEBUG:
-        return ["creative2", "minerva", "anarchy", "creative", "patreon"]
-    return []
+        return {"creative2": Server("creative2", True),
+                "minerva": Server("minerva", True),
+                "anarchy": Server("anarchy", False),
+                "creative": Server("creative", True),
+                "patreon": Server("patreon", False)
+                }
+    return {}
 
 
 def getWorldList(server: str) -> List[str]:
@@ -32,15 +40,15 @@ def getJarList() -> List[str]:
 
 @app.route("/")
 def root() -> Any:
-    servers = getServerList()
+    servers = getServers()
     if len(servers) == 0:
         return "No servers? :("
-    return redirect("/" + servers[0])
+    return redirect("/" + list(servers)[0])
 
 
 @app.route("/<server>/")
 def server(server: str) -> Any:
-    servers = getServerList()
+    servers = getServers()
     if server not in servers:
         return abort(404)
 
@@ -55,4 +63,4 @@ def server(server: str) -> Any:
                   }
 
     return render_template("server.html", serverInfo=serverInfo,
-                           servers=servers, worlds=worlds, jars=jars)
+                           servers=servers.values(), worlds=worlds, jars=jars)
