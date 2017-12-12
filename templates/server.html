@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% set server = serverInfo.name %}
+
+{% block main %}
+<div class="container">
+	<div class="right" style="z-index: 100; position: relative">
+		<br>
+		<div class="btn-group">
+			<a class="btn red" href="/{{server}}/stop">Stop</a>
+			<a class="btn yellow darken-4" href="/{{server}}/restart">Restart</a>
+			<a class="btn green" href="/{{server}}/start">Start</a>
+		</div>
+	</div>
+	<form style="top: 10px; position: relative;">
+		<div class="row">
+			<div class="col s12">
+				<div class="row">
+					<div class="col s4 input-field">
+						<input id="server_name" type="text" disabled value="{{serverInfo.name}}">
+						<label for="server_name">Server Name</label>
+					</div>
+					<div class="col s4 input-field">
+						<input id="server_port" type="text" disabled value="{{serverInfo.port}}">
+						<label for="server_port">Server Port</label>
+					</div>
+					<div class="col s4 input-field">
+						<input id="server_ram" type="text" disabled value="{{serverInfo.ram}}">
+						<label for="server_ram">RAM (MiB)</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12 input-field">
+						<input id="server_world" type="text" list="worlds" value="{{serverInfo.world}}" />
+						<datalist id="worlds">
+							{% for world_ in worlds %}
+							<option>{{world_}}</option>
+							{% endfor %}
+						</datalist>
+						<label for="server_world">Active world (requires restart; auto-complete available)</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col s12 input-field">
+						<input id="server_jar" type="text" list="jars" value="{{serverInfo.jar}}" />
+						<datalist id="jars">
+							{% for jar_ in jars %}
+							<option>{{jar_}}</option>
+							{% endfor %}
+						</datalist>
+						<label for="server_jar">Jar (requires restart; auto-complete available)</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{% endblock %}

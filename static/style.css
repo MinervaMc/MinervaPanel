@@ -1,0 +1,45 @@
+header, main, footer {
+	padding-left: 300px;
+}
+
+@media only screen and (max-width : 992px) {
+	header, main, footer {
+		padding-left: 0px;
+	}
+}
+
+@media only screen and (max-width : 599px) {
+	.page-title {
+		font-size: 1.0994em;
+	}
+}
+
+@media only screen and (min-width : 600px) {
+	.page-title {
+		font-size: 24pt;
+	}
+}
+
+#logo-container {
+	height: 100%;
+}
+
+.btn-group > .btn:first-child:not(:last-child) {
+	margin-left: 0px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+.btn-group > .btn:last-child:not(:first-child) {
+	margin-left: -5px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+.btn-group > .btn:not(:first-child):not(:last-child) {
+	margin-left: -5px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
