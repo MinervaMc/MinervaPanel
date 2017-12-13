@@ -46,7 +46,7 @@
 								{% if serv.online %}
 									{% set color = "green" %}
 								{% endif %}
-								<a href="/{{serv.name}}">
+								<a href="{{url_for('server', server=serv.name)}}">
 									<div class="valign-wrapper">
 										<div style="margin-right: 10px;">
 											<div class="lamp {{color}} left"></div> {# Probably want to update these with JS? #}

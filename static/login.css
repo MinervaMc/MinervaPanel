@@ -1,0 +1,17 @@
+.input-field label {
+	color: #AAA;
+}
+
+.input-field input[type=text]:focus + label {
+	color: #CCC !important;
+}
+
+.input-field input {
+	border-bottom: 1px solid #AAA !important;
+	box-shadow: 0 1px 0 0 #AAA !important;
+}
+
+.input-field input:focus {
+	border-bottom: 1px solid #CCC !important;
+	box-shadow: 0 1px 0 0 #CCC !important;
+}

@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 # -*- encoding: utf8
 
-from flask import Flask, render_template, redirect, abort
+from flask import Flask, render_template, redirect, abort, session, request, url_for
+import flask
+import functools
+import hashlib
 import os
 import re
 import subprocess
-from typing import Any, Dict, List, NamedTuple
+import sqlite3
+from typing import Any, Dict, List, NamedTuple, Optional  # noqa
 
 import secrets
 
@@ -73,15 +77,73 @@ def getMSMConfig() -> Dict[str, str]:
     return ret
 
 
+def login_required(f):
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        if "username" not in session or session["username"] is None:
+            session["next"] = request.url
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return inner
+
+
+def get_db() -> sqlite3.Connection:
+    db = getattr(flask.g, "database", None)  # type: Optional[sqlite3.Connection]
+    if db is None:
+        db = sqlite3.connect("panel.db")
+        flask.g.database = db
+    return db
+
+
+@app.teardown_appcontext
+def close_db(exception) -> None:
+    db = getattr(flask.g, "database", None)  # type: Optional[sqlite3.Connection]
+    if db is not None:
+        db.close()
+
+
+def with_db(f):
+    @functools.wraps(f)
+    def inner(*args, **kwargs):
+        db = get_db()
+        ret = f(db, *args, **kwargs)
+        db.commit()
+        return ret
+    return inner
+
+
 @app.route("/")
 def root() -> Any:
     servers = getServers()
     if len(servers) == 0:
         return "No servers? :("
-    return redirect("/" + list(servers)[0])
+    return redirect("/server/" + list(servers)[0])
 
 
-@app.route("/<server>/")
+@app.route("/login/", methods=["GET", "POST"])
+@with_db
+def login(db: sqlite3.Connection) -> Any:
+    if request.method == "POST":
+        if valid_credentials(request.form["username"], request.form["password"]):
+            session["username"] = request.form["username"]
+            if "next" in session and session["next"] is not None:
+                next = session["next"]
+                del session["next"]
+                return redirect(next)
+            return redirect("/")
+        return redirect("/login")
+    elif request.method == "GET":
+        return render_template("login.html")
+
+
+@app.route("/logout")
+def logout() -> Any:
+    del session["username"]
+    return ""
+
+
+@app.route("/server/<server>/")
+@login_required
 def server(server: str) -> Any:
     servers = getServers()
     if server not in servers:
@@ -101,23 +163,45 @@ def server(server: str) -> Any:
                            servers=servers.values(), worlds=worlds, jars=jars)
 
 
+@with_db
+def valid_credentials(db: sqlite3.Connection, username: str, password: str) -> bool:
+    c = db.cursor()
+    c.execute("SELECT password, salt FROM user WHERE username=?", (username,))
+    user = c.fetchone()
+    if user is None:
+        return False
+    salted = user[1] + password
+    hashed = hashlib.sha256(salted.encode("utf-8")).hexdigest()
+    return user[0] == hashed
+
+
 # TODO: Run start/restart/stop in the background and give user feedback
-@app.route("/<server>/stop")
+@app.route("/server/<server>/stop")
+@login_required
 def stop(server: str) -> Any:
     subprocess.run(["msm", server, "stop"])
     return redirect("/" + server)
 
 
-@app.route("/<server>/restart")
+@app.route("/server/<server>/restart")
+@login_required
 def restart(server: str) -> Any:
     subprocess.run(["msm", server, "restart"])
     return redirect("/" + server)
 
 
-@app.route("/<server>/start")
+@app.route("/server/<server>/start")
+@login_required
 def start(server: str) -> Any:
     subprocess.run(["msm", server, "start"])
     return redirect("/" + server)
+
+
+@app.before_first_request
+@with_db
+def init_db(db: sqlite3.Connection) -> None:
+    c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, salt TEXT)")
 
 
 app.secret_key = secrets.secret_key
