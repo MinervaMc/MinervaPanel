@@ -2,7 +2,13 @@
 
 {% set page = 'admins' %}
 
-{% block title %}User “{{user}}”{% endblock %}
+{% block title %}
+{% if user == "" %}
+	New User
+{% else %}
+	User “{{user}}”
+{% endif %}
+{% endblock %}
 
 {% block main %}
 <div class="container">

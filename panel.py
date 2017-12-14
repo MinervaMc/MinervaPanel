@@ -199,6 +199,27 @@ def user(db: sqlite3.Connection, user: str) -> Any:
     return abort(400)
 
 
+@app.route("/newadmin", methods=["GET", "POST"])
+@with_db
+def new_user(db: sqlite3.Connection):
+    if request.method == "GET":
+        return render_template("user.html", user="")
+    elif request.method == "POST":
+        user = request.form["username"]
+        password = request.form["password"]
+
+        salt = os.urandom(8)
+        hasher = hashlib.sha256()
+        hasher.update(salt)
+        hasher.update(password.encode("utf-8"))
+        hashed = hasher.hexdigest()
+
+        c = db.cursor()
+        c.execute("INSERT INTO user (username, password, salt) VALUES (?, ?, ?)", (user, hashed, salt))
+        return redirect(url_for("admins"))
+    return abort(400)
+
+
 @with_db
 def valid_credentials(db: sqlite3.Connection, username: str, password: str) -> bool:
     c = db.cursor()
