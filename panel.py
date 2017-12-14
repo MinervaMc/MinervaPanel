@@ -272,3 +272,6 @@ def init_db(db: sqlite3.Connection) -> None:
 
 
 app.secret_key = secrets.secret_key
+
+if __name__ == "__main__":
+    app.run(port=15000)
