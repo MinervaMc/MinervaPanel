@@ -117,7 +117,7 @@ def root() -> Any:
     servers = getServers()
     if len(servers) == 0:
         return "No servers? :("
-    return redirect("/server/" + list(servers)[0])
+    return redirect(url_for('server', server=list(servers)[0]))
 
 
 @app.route("/login/", methods=["GET", "POST"])
@@ -130,8 +130,8 @@ def login(db: sqlite3.Connection) -> Any:
                 next = session["next"]
                 del session["next"]
                 return redirect(next)
-            return redirect("/")
-        return redirect("/login")
+            return redirect(url_for('root'))
+        return redirect(url_for('login'))
     elif request.method == "GET":
         return render_template("login.html")
 
@@ -247,21 +247,21 @@ def valid_credentials(db: sqlite3.Connection, username: str, password: str) -> b
 @login_required
 def stop(server: str) -> Any:
     subprocess.run(["msm", server, "stop"])
-    return redirect("/" + server)
+    return redirect(url_for('server', server=server))
 
 
 @app.route("/server/<server>/restart")
 @login_required
 def restart(server: str) -> Any:
     subprocess.run(["msm", server, "restart"])
-    return redirect("/" + server)
+    return redirect(url_for('server', server=server))
 
 
 @app.route("/server/<server>/start")
 @login_required
 def start(server: str) -> Any:
     subprocess.run(["msm", server, "start"])
-    return redirect("/" + server)
+    return redirect(url_for('server', server=server))
 
 
 @app.before_first_request

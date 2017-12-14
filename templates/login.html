@@ -5,7 +5,7 @@
 	<title>Minerva Server Manager</title>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-	<link rel="stylesheet" href="/static/login.css">
+	<link rel="stylesheet" href="{{url_for('static', filename='login.css')}}">
 </head>
 <body>
 	<div class="container">
@@ -14,7 +14,7 @@
 				<div class="card red">
 					<div class="card-content white-text">
 						<span class="card-title">Login required</span>
-						<form action="." method="POST">
+						<form method="POST">
 							<div class="row">
 								<div class="input-field col s12">
 									<input type="text" name="username" id="username">

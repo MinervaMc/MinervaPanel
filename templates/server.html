@@ -10,9 +10,9 @@
 	<div class="right" style="z-index: 100; position: relative">
 		<br>
 		<div class="btn-group">
-			<a class="btn red" href="/{{server}}/stop">Stop</a>
-			<a class="btn yellow darken-4" href="/{{server}}/restart">Restart</a>
-			<a class="btn green" href="/{{server}}/start">Start</a>
+			<a class="btn red" href="url_for('stop', server=server)">Stop</a>
+			<a class="btn yellow darken-4" href="url_for('restart', server=server)">Restart</a>
+			<a class="btn green" href="url_for('start', server=server)">Start</a>
 		</div>
 	</div>
 	<form style="top: 10px; position: relative;">
