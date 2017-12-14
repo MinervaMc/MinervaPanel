@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% set page = 'server' %}
 {% set server = serverInfo.name %}
+
+{% block title %}“{{serverInfo.name}}” Server Information{% endblock %}
 
 {% block main %}
 <div class="container">

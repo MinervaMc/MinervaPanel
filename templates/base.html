@@ -17,7 +17,7 @@
 				</div>
 				<div class="container">
 					<div class="nav-wrapper center">
-						<a class="page-title">“{{serverInfo.name}}” Server Information</a>
+						<a class="page-title">{% block title %}{% endblock %}</a>
 					</div>
 				</div>
 			</nav>
@@ -28,15 +28,17 @@
 					</a>
 				</li>
 				<li class="bold">
-					<a class="collapsible-header waves-effect waves-teal">Panel management</a>
+					<a class="collapsible-header waves-effect waves-teal {% if page == 'admins' %}active{% endif %}">Panel management</a>
 					<div class="collapsible-body">
 						<ul>
-							<li><a href="#!">Administrators</a></li>
-							<li><a href="#!">Other stuff ¯\_(ツ)_/¯</a></li>
+							<li {% if page == 'admins' %}class="active"{% endif %}>
+								<a href="{{url_for('admins')}}">Administrators</a>
+							</li>
+							{# <li><a href="#!">Other stuff ¯\_(ツ)_/¯</a></li> #}
 						</ul>
 					</div>
 				</li>
-				<li class="bold active">
+				<li class="bold {% if page == 'server' %}active{% endif %}">
 					<a class="collapsible-header waves-effect waves-teal active">Servers</a>
 					<div class="collapsible-body">
 						<ul>

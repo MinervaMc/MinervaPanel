@@ -152,15 +152,51 @@ def server(server: str) -> Any:
     worlds = getWorldList(server)
     jars = getJarList()
 
-    serverInfo = {"jar": "minerva/minerva.jar",
-                  "world": "world",
+    serverInfo = {"jar": "-",
+                  "world": "-",
                   "name": server,
-                  "ram": 3072,
-                  "port": 65535,
+                  "ram": "-",
+                  "port": "-",
                   }
 
     return render_template("server.html", serverInfo=serverInfo,
                            servers=servers.values(), worlds=worlds, jars=jars)
+
+
+@app.route("/admins/")
+@login_required
+@with_db
+def admins(db: sqlite3.Connection) -> Any:
+    c = db.cursor()
+    c.execute("SELECT username FROM user")
+    users = [row[0] for row in c.fetchall()]
+    return render_template("admins.html", users=users, servers=getServers().values())
+
+
+@app.route("/admins/<user>/", methods=["GET", "POST"])
+@login_required
+@with_db
+def user(db: sqlite3.Connection, user: str) -> Any:
+    if request.method == "GET":
+        return render_template("user.html", user=user, servers=getServers().values())
+    elif request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        c = db.cursor()
+        if username != user:
+            c.execute("UPDATE user SET username = ? WHERE username=?", (username, user))
+            user = username
+
+        if password != "":
+            salt = os.urandom(8)
+            hasher = hashlib.sha256()
+            hasher.update(salt)
+            hasher.update(password.encode("utf-8"))
+            hashed = hasher.hexdigest()
+            c.execute("UPDATE user SET password = ?, salt = ? WHERE username=?", (hashed, salt, user))
+        return redirect(url_for('admins'))
+    return abort(400)
 
 
 @with_db
@@ -170,8 +206,10 @@ def valid_credentials(db: sqlite3.Connection, username: str, password: str) -> b
     user = c.fetchone()
     if user is None:
         return False
-    salted = user[1] + password
-    hashed = hashlib.sha256(salted.encode("utf-8")).hexdigest()
+    hasher = hashlib.sha256()
+    hasher.update(user[1])
+    hasher.update(password.encode("utf-8"))
+    hashed = hasher.hexdigest()
     return user[0] == hashed
 
 
