@@ -14,7 +14,7 @@ from typing import Any, Dict, List, NamedTuple, Optional  # noqa
 import secrets
 
 app = Flask(__name__)
-DEBUG = True
+DEBUG = False
 
 Server = NamedTuple('Server', [("name", str), ("online", bool)])
 
