@@ -199,6 +199,14 @@ def user(db: sqlite3.Connection, user: str) -> Any:
     return abort(400)
 
 
+@app.route("/admins/<user>/delete")
+@with_db
+def delete_user(db: sqlite3.Connection, user: str) -> Any:
+    c = db.cursor()
+    c.execute("DELETE FROM user WHERE username=?", (user,))
+    return redirect(url_for("admins"))
+
+
 @app.route("/newadmin", methods=["GET", "POST"])
 @with_db
 def new_user(db: sqlite3.Connection):
